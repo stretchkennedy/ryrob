@@ -31,6 +31,8 @@ object RobotCommand {
 
     case List("EXIT") => sys.exit()
 
+    case List("") => (r: Robot) => r
+    
     case s => (r: Robot) => {
       println("Unrecognised command: " + s.head)
       r
