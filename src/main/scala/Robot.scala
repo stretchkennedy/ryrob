@@ -37,7 +37,7 @@ object Robot {
       new RobotImpl(point, direction.right, bounds)
 
     override def report: String = {
-      List(direction, "@", point.x, ",", point.y).mkString
+      List("[", point.x, ",", point.y, "], ", direction).mkString
     }
   }
 
@@ -45,8 +45,8 @@ object Robot {
       extends Robot {
     override def place(p: Point, dir: Direction) = new RobotImpl(p, dir, bounds)
     override def move: Robot = this
-    def left: Robot = this
-    def right: Robot = this
-    def report: String = "INVALID ROBOT PLACEMENT"
+    override def left: Robot = this
+    override def right: Robot = this
+    override def report: String = "INVALID ROBOT PLACEMENT"
   }
 }

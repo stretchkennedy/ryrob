@@ -2,7 +2,7 @@ import scala.util.Try
 import scala.collection.immutable.StringOps
 
 object RobotCommand {
-  def apply(com: String): (Robot) => Robot = com.split(" ", 2).toList.map(_.toUpperCase) match {
+  def apply(com: String): (Robot) => Robot = com.toUpperCase().split(" ", 2).toList match {
     case List("PLACE", args) => (r: Robot) => {
       args.mkString.split(",").map(_.trim) match {
         case Array(x, y, dir) => {
