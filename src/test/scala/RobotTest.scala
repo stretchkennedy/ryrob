@@ -5,7 +5,7 @@ import org.specs2.specification._
 object RobotSpec extends Specification {
   "Robot" should {
     trait c1 extends Scope {
-      val robot: Robot = Robot(new Point(0, 0), Direction.North).get
+      val robot: Robot = Robot(new Point(10, 10))
     }
     "report correctly after being placed" in new c1 {
       robot
@@ -36,6 +36,22 @@ object RobotSpec extends Specification {
         .place(new Point(1, 2), Direction.North)
         .place(new Point(4, 5), Direction.South)
         .report mustEqual "South@4,5"
+    }
+    "report correctly after running up against its bounds" in new c1 {
+      robot
+        .place(new Point(0, 10), Direction.North)
+        .move
+        .report mustEqual "North@0,10"
+    }
+    "report that it is invalid before being placed" in new c1 {
+      robot
+        .report mustEqual "INVALID ROBOT PLACEMENT"
+    }
+    "remain unchanged if it is moved to a location outside its bounds" in new c1 {
+      robot
+      .place(new Point(0,0), Direction.North)
+      .place(new Point(11,11), Direction.North)
+      .report mustEqual "North@0,0"
     }
   }
 }

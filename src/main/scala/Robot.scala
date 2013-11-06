@@ -10,26 +10,43 @@ trait Robot {
 
 object Robot {
 
-  def apply(p: Point, dir: Direction): Option[Robot] = {
-    Some(new RobotImpl(p, dir))
+  def apply(bounds: Point): Robot = {
+    new RobotInvalid(bounds)
   }
 
-  private class RobotImpl(point: Point, direction: Direction)
+  private class RobotImpl(point: Point, direction: Direction, bounds: Point)
       extends Robot {
     override def place(p: Point, dir: Direction): Robot =
-      Robot(p, dir).getOrElse(this)
+      p.inBounds(bounds) match {
+        case true  => new RobotImpl(p, dir, bounds)
+        case false => this
+      }
 
-    override def move: Robot = 
-      Robot(point.move(direction), direction).getOrElse(this)
+    override def move: Robot = {
+      val newPoint = point.move(direction)
+      newPoint.inBounds(bounds) match {
+        case true  => new RobotImpl(newPoint, direction, bounds)
+        case false => this
+      }
+    }
 
     override def left: Robot =
-      Robot(point, direction.left).getOrElse(this)
+      new RobotImpl(point, direction.left, bounds)
 
     override def right: Robot =
-      Robot(point, direction.right).getOrElse(this)
+      new RobotImpl(point, direction.right, bounds)
 
     override def report: String = {
       List(direction, "@", point.x, ",", point.y).mkString
     }
+  }
+
+  private class RobotInvalid(bounds: Point)
+      extends Robot {
+    override def place(p: Point, dir: Direction) = new RobotImpl(p, dir, bounds)
+    override def move: Robot = this
+    def left: Robot = this
+    def right: Robot = this
+    def report: String = "INVALID ROBOT PLACEMENT"
   }
 }
