@@ -5,7 +5,7 @@ import org.specs2.specification._
 class RobotCommandTest extends Specification {
   "RobotCommand" should {
     trait c1 extends Scope {
-      val board = new Board(new Rectangle(0, 10, 0, 10))
+      val board = new Table(new Rectangle(0, 10, 0, 10))
       var robot = Robot(board)
     }
     "correctly place a robot" in new c1 {

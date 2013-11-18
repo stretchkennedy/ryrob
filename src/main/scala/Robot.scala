@@ -10,11 +10,11 @@ trait Robot {
 
 object Robot {
 
-  def apply(board: Board): Robot = {
+  def apply(board: Table): Robot = {
     new RobotInvalid(board)
   }
 
-  private class RobotImpl(point: Point, direction: Direction, board: Board)
+  private class RobotImpl(point: Point, direction: Direction, board: Table)
       extends Robot {
     override def place(p: Point, dir: Direction): Robot =
       board.isAccessible(p) match {
@@ -41,7 +41,7 @@ object Robot {
     }
   }
 
-  private class RobotInvalid(board: Board)
+  private class RobotInvalid(board: Table)
       extends Robot {
     override def place(p: Point, dir: Direction) = new RobotImpl(p, dir, board)
     override def move: Robot = this
