@@ -6,7 +6,8 @@ import scala.collection.mutable.MutableList
 
 object Console {
   def main(args: Array[String]) {
-    val initial = Robot(new Point(10, 10));
+    val board = new Board(new Rectangle(0, 10, 0, 10))
+    val initial = Robot(board);
     val handleLine = (r: Robot, l: String) => {
       val ret = RobotCommand(l)(r)
       print("# ")

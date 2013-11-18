@@ -10,40 +10,40 @@ trait Robot {
 
 object Robot {
 
-  def apply(bounds: Point): Robot = {
-    new RobotInvalid(bounds)
+  def apply(board: Board): Robot = {
+    new RobotInvalid(board)
   }
 
-  private class RobotImpl(point: Point, direction: Direction, bounds: Point)
+  private class RobotImpl(point: Point, direction: Direction, board: Board)
       extends Robot {
     override def place(p: Point, dir: Direction): Robot =
-      p.inBounds(bounds) match {
-        case true  => new RobotImpl(p, dir, bounds)
+      board.isAccessible(p) match {
+        case true  => new RobotImpl(p, dir, board)
         case false => this
       }
 
     override def move: Robot = {
       val newPoint = point.move(direction)
-      newPoint.inBounds(bounds) match {
-        case true  => new RobotImpl(newPoint, direction, bounds)
+      board.isAccessible(newPoint) match {
+        case true  => new RobotImpl(newPoint, direction, board)
         case false => this
       }
     }
 
     override def left: Robot =
-      new RobotImpl(point, direction.left, bounds)
+      new RobotImpl(point, direction.left, board)
 
     override def right: Robot =
-      new RobotImpl(point, direction.right, bounds)
+      new RobotImpl(point, direction.right, board)
 
     override def report: String = {
       List("[", point.x, ",", point.y, "], ", direction).mkString
     }
   }
 
-  private class RobotInvalid(bounds: Point)
+  private class RobotInvalid(board: Board)
       extends Robot {
-    override def place(p: Point, dir: Direction) = new RobotImpl(p, dir, bounds)
+    override def place(p: Point, dir: Direction) = new RobotImpl(p, dir, board)
     override def move: Robot = this
     override def left: Robot = this
     override def right: Robot = this

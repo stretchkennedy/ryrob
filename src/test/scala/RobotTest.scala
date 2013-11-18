@@ -5,7 +5,8 @@ import org.specs2.specification._
 object RobotSpec extends Specification {
   "Robot" should {
     trait c1 extends Scope {
-      val robot: Robot = Robot(new Point(10, 10))
+      val board = new Board(new Rectangle(0, 10, 0, 10))
+      val robot = Robot(board)
     }
     "report correctly after being placed" in new c1 {
       robot

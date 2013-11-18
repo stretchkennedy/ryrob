@@ -8,9 +8,6 @@ class Point(val x: Int, val y: Int) {
     case WEST  => new Point(x - 1, y)
   }
   
-  def inBounds(b: Point): Boolean = 
-    this.x < b.x && 
-    this.y < b.y &&
-    this.x >= 0 &&
-    this.y >= 0
+  def isInside(r: Rectangle): Boolean = 
+    r.doesContain(this)
 }
