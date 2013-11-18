@@ -25,9 +25,10 @@ object RobotCommand {
       r
     }
 
-    case List("MOVE") => (r: Robot) => r.move
-    case List("LEFT") => (r: Robot) => r.left
-    case List("RIGHT") => (r: Robot) => r.right
+    case List("MOVE") => _.move
+    case List("LEFT") => _.left
+    case List("RIGHT") => _.right
+    case List("CLEAN") => _.clean
 
     case List("EXIT") => sys.exit()
 

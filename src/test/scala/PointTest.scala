@@ -23,5 +23,8 @@ object PointTest extends Specification {
       p.isInside(new Rectangle(2, 10, 3, 10)) mustEqual true
       p.isInside(new Rectangle(0, 3, 0, 4)) mustEqual true
     }
+    "calculate equality correctly" in new r1 {
+      p equals new Point(3, 2) mustEqual true
+    }
   }
 }

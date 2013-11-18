@@ -5,48 +5,60 @@ trait Robot {
   def move: Robot
   def left: Robot
   def right: Robot
+  def clean: Robot
+  def hasWon: Boolean
   def report: String
 }
 
 object Robot {
 
-  def apply(board: Table): Robot = {
-    new RobotInvalid(board)
+  def apply(table: Table): Robot = {
+    new RobotInvalid(table)
   }
 
-  private class RobotImpl(point: Point, direction: Direction, board: Table)
+  private abstract class AbstractRobot(table: Table)
       extends Robot {
-    override def place(p: Point, dir: Direction): Robot =
-      board.isAccessible(p) match {
-        case true  => new RobotImpl(p, dir, board)
+    override def place(p: Point, dir: Direction) =
+      table.isAccessible(p) match {
+        case true  => new RobotImpl(p, dir, table)
         case false => this
       }
+    
+    override def hasWon = !table.hasDirt
+  }
 
-    override def move: Robot = {
+  private class RobotImpl(point: Point, direction: Direction, table: Table)
+      extends AbstractRobot(table) {
+
+    override def move = {
       val newPoint = point.move(direction)
-      board.isAccessible(newPoint) match {
-        case true  => new RobotImpl(newPoint, direction, board)
+      table.isAccessible(newPoint) match {
+        case true  => new RobotImpl(newPoint, direction, table)
         case false => this
       }
     }
 
-    override def left: Robot =
-      new RobotImpl(point, direction.left, board)
+    override def left =
+      new RobotImpl(point, direction.left, table)
 
-    override def right: Robot =
-      new RobotImpl(point, direction.right, board)
+    override def right =
+      new RobotImpl(point, direction.right, table)
 
-    override def report: String = {
-      List("[", point.x, ",", point.y, "], ", direction).mkString
+    override def clean = {
+      val cleanPoint = point.move(direction)
+      new RobotImpl(point, direction, table.clean(cleanPoint))
     }
+
+    override def report =
+      point + ", " + direction
   }
 
-  private class RobotInvalid(board: Table)
-      extends Robot {
-    override def place(p: Point, dir: Direction) = new RobotImpl(p, dir, board)
-    override def move: Robot = this
-    override def left: Robot = this
-    override def right: Robot = this
-    override def report: String = "INVALID ROBOT PLACEMENT"
+  private class RobotInvalid(table: Table)
+      extends AbstractRobot(table) {
+    override def move = this
+    override def left = this
+    override def right = this
+    override def clean = this
+    override def report = "INVALID ROBOT PLACEMENT"
   }
 }

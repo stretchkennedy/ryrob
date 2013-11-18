@@ -22,3 +22,7 @@ project/plugins/project/
 .classpath
 .project
 .settings/
+
+# sample dirt/table files
+dirtfile
+tablefile
